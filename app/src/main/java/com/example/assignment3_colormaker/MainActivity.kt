@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.Switch
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModelProvider
 
 const val LOG_TAG = "MainActivity"
 
@@ -32,17 +33,13 @@ class MainActivity : AppCompatActivity() {
     private lateinit var switchBlue: Switch
     private lateinit var seekBarBlue: SeekBar
     private lateinit var editTextBlue: EditText
-
     private lateinit var resetButton: Button
 
 
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @RequiresApi(Build.VERSION_CODES.S)
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
+    private fun connectViews(){
         colorView = findViewById(R.id.colorView)
 
         switchRed = findViewById(R.id.switchRed)
@@ -63,35 +60,55 @@ class MainActivity : AppCompatActivity() {
         switchBlue.isChecked = true
         switchGreen.isChecked = true
 
-//       resetButton.setBackgroundColor(Color.rgb(250,249,246))
+    }
+
+    private fun loadViews(){
+
         resetButton.setTextColor(Color.WHITE)
 
-        resetButton.setOnClickListener { view: View ->
-            val resetBtn = view as Button
-            val txtResetBtn =resetBtn.text.toString()
-            editTextRed.setText(R.string.editTextResetValue)
-            editTextBlue.setText(R.string.editTextResetValue)
-            editTextGreen.setText(R.string.editTextResetValue)
+        colorMakerModel.loadRedText()
+        Log.d(LOG_TAG, "OnCreate Method: setting red text value  from datastore ${colorMakerModel.getRedTextValue()}")
+        editTextRed.setText(colorMakerModel.getRedTextValue().toString())
+        seekBarRed.progress = if (editTextRed.text.toString().isNotEmpty()) (editTextRed.text.toString()
+            .toFloat() * 100).toInt() else 0
 
-            seekBarRed.progress = 0
-            seekBarGreen.progress = 0
-            seekBarBlue.progress = 0
+        editTextGreen.setText(colorMakerModel.getGreenTextValue().toString())
+        seekBarGreen.progress = if (editTextGreen.text.toString().isNotEmpty()) (editTextGreen.text.toString()
+            .toFloat() * 100).toInt() else 0
 
-            switchRed.isChecked = true
-            switchBlue.isChecked = true
-            switchGreen.isChecked = true
 
-            seekBarRed.isEnabled = true
-            seekBarGreen.isEnabled = true
-            seekBarBlue.isEnabled = true
+        editTextBlue.setText(colorMakerModel.getBlueTextValue().toString())
+        seekBarBlue.progress = if (editTextBlue.text.toString().isNotEmpty()) (editTextBlue.text.toString()
+            .toFloat() * 100).toInt() else 0
 
-            editTextRed.isEnabled = true
-            editTextGreen.isEnabled = true
-            editTextBlue.isEnabled = true
+        // start of  load  colorview
+        val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
+        val green = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
+        val blue = ((editTextBlue.text.toString().toFloat()) * 255).toInt()
 
-            Log.i(LOG_TAG, "button \"$txtResetBtn\" was called")
-        }
+        colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
+        //-----end of load colorView
+
+    }
+
+
+    @RequiresApi(Build.VERSION_CODES.S)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        Log.d(LOG_TAG, "onCreate called")
+        this.connectViews()
+        this.loadViews()
+        this.setUpEditTextListeners()
+        this.setUpSwitchBarListeners()
+        this.setUpSeekBarListeners()
+        this.resetButtonListener()
+
+    }
+
+    private fun setUpEditTextListeners(){
         editTextGreen.setOnKeyListener { view, i, keyEvent ->
             Boolean
             val txtGreen = view as EditText
@@ -102,7 +119,7 @@ class MainActivity : AppCompatActivity() {
             if (txtGreen.text.toString().isEmpty()) {
                 editTextGreen.setText(((seekBarGreen.progress.div(100.00)).toString()))
             }
-
+            colorMakerModel.setGreenTextValue(editTextGreen.text.toString().toFloat())
             Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
             false
 
@@ -115,10 +132,12 @@ class MainActivity : AppCompatActivity() {
             if (txtRed.text.toString().isEmpty()) {
                 editTextRed.setText(((seekBarRed.progress.div(100.00)).toString()))
             }
+            colorMakerModel.setRedTextValue(editTextRed.text.toString().toFloat())
 
             Log.i(LOG_TAG, txtRed.text.toString())
             Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
             false
+
 
         }
         editTextBlue.setOnKeyListener { view, i, keyEvent ->
@@ -130,12 +149,15 @@ class MainActivity : AppCompatActivity() {
             if (txtBlue.text.toString().isEmpty()) {
                 editTextBlue.setText(((seekBarBlue.progress.div(100.00)).toString()))
             }
+            colorMakerModel.setBlueTextValue(editTextBlue.text.toString().toFloat())
             Log.i(LOG_TAG, txtBlue.text.toString())
             Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
             false
 
         }
 
+    }
+    private fun setUpSwitchBarListeners(){
         switchGreen.setOnClickListener {
             val swGreen: Switch = it as Switch
             if (!swGreen.isChecked) {
@@ -210,6 +232,9 @@ class MainActivity : AppCompatActivity() {
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
             }
         }
+    }
+
+    private fun setUpSeekBarListeners(){
         seekBarRed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(sb: SeekBar?, p1: Int, p2: Boolean) {
@@ -218,17 +243,19 @@ class MainActivity : AppCompatActivity() {
                     val seekBarProgressRed = progressRed.div(100.00)
 
                     editTextRed.setText((seekBarProgressRed.toString()))
-
+                    colorMakerModel.setRedTextValue(editTextRed.text.toString().toFloat())
+//                    colorMakerModel.saveRedText()
+                    Log.i(LOG_TAG, "seekBarRed change: saveRedText called -  $editTextRed")
                 }
                 val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
                 val green = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
-                val blue = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
+                val blue = ((editTextBlue.text.toString().toFloat()) * 255).toInt()
 
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
-                Log.i(LOG_TAG, "SeekBar Red  $red")
-                Log.i(LOG_TAG, "SeekBar green  $green")
-                Log.i(LOG_TAG, "SeekBar blue  $blue")
+                Log.i(LOG_TAG, "seekBarRed change: Red  $red")
+                Log.i(LOG_TAG, "seekBarRed change: green  $green")
+                Log.i(LOG_TAG, "seekBarRed change: blue  $blue")
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {}
@@ -243,17 +270,17 @@ class MainActivity : AppCompatActivity() {
 
                     editTextGreen.setText((seekBarProgressGreen.toString()))
 
-
+                    colorMakerModel.setGreenTextValue(editTextGreen.text.toString().toFloat())
                 }
                 val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
                 val green = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
-                val blue = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
+                val blue = ((editTextBlue.text.toString().toFloat()) * 255).toInt()
 
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
-                Log.i(LOG_TAG, "SeekBar Red  $red")
-                Log.i(LOG_TAG, "SeekBar green  $green")
-                Log.i(LOG_TAG, "SeekBar blue  $blue")
+                Log.i(LOG_TAG, "seekBarGreen change: Red  $red")
+                Log.i(LOG_TAG, "seekBarGreen change: green  $green")
+                Log.i(LOG_TAG, "seekBarGreen change: blue  $blue")
             }
 
             override fun onStartTrackingTouch(p0: SeekBar?) {}
@@ -266,17 +293,19 @@ class MainActivity : AppCompatActivity() {
                 if (progressBlue != null) {
                     val seekBarProgressBlue = progressBlue.div(100.00)
                     editTextBlue.setText((seekBarProgressBlue.toString()))
+
+                    colorMakerModel.setBlueTextValue(editTextBlue.text.toString().toFloat())
                 }
 
                 val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
                 val green = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
-                val blue = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
+                val blue = ((editTextBlue.text.toString().toFloat()) * 255).toInt()
 
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
-                Log.i(LOG_TAG, "SeekBar Red  $red")
-                Log.i(LOG_TAG, "SeekBar green  $green")
-                Log.i(LOG_TAG, "SeekBar blue  $blue")
+                Log.i(LOG_TAG, "seekBarBlue change: Red  $red")
+                Log.i(LOG_TAG, "seekBarBlue change: green  $green")
+                Log.i(LOG_TAG, "seekBarBlue change: blue  $blue")
 
             }
 
@@ -284,6 +313,63 @@ class MainActivity : AppCompatActivity() {
             override fun onStopTrackingTouch(p0: SeekBar?) {}
         })
 
-
     }
+
+    private fun resetButtonListener(){
+        resetButton.setOnClickListener { view: View ->
+            val resetBtn = view as Button
+            val txtResetBtn =resetBtn.text.toString()
+            editTextRed.setText(R.string.editTextResetValue)
+            editTextBlue.setText(R.string.editTextResetValue)
+            editTextGreen.setText(R.string.editTextResetValue)
+
+            seekBarRed.progress = 0
+            seekBarGreen.progress = 0
+            seekBarBlue.progress = 0
+
+            switchRed.isChecked = true
+            switchBlue.isChecked = true
+            switchGreen.isChecked = true
+
+            seekBarRed.isEnabled = true
+            seekBarGreen.isEnabled = true
+            seekBarBlue.isEnabled = true
+
+            editTextRed.isEnabled = true
+            editTextGreen.isEnabled = true
+            editTextBlue.isEnabled = true
+
+            Log.i(LOG_TAG, "button \"$txtResetBtn\" was called")
+        }
+    }
+
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d(LOG_TAG, "onDestroy called")
+//        colorMakerModel.saveRedText()
+//        Log.d(LOG_TAG, "On Destroy and save red text value to datastore")
+    }
+    override fun onStart() {
+        super.onStart()
+        Log.d(LOG_TAG, "onStart called")
+    }
+    override fun onStop() {
+        super.onStop()
+        Log.d(LOG_TAG, "onStop called")
+    }
+    override fun onResume() {
+        super.onResume()
+        Log.d(LOG_TAG, "onResume called")
+    }
+    override fun onPause() {
+        super.onPause()
+        Log.d(LOG_TAG, "onPause called")
+    }
+
+    private val colorMakerModel: ColorMakerViewModel by lazy {
+        ColorMakerPreferencesDataStore.initialize(this)
+        ViewModelProvider(this)[ColorMakerViewModel::class.java]
+    }
+
 }

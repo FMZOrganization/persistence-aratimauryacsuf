@@ -75,6 +75,7 @@
                 android:progressBackgroundTint="@color/seekBarRed"
                 android:progressTint="@color/seekBarRed"
                 android:thumbTint="@color/seekBarRed"
+                android:saveEnabled="false"
 
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/editTextNumDecRed"
@@ -95,6 +96,7 @@
                 android:inputType="numberDecimal"
                 android:minHeight="48dp"
                 android:text="@string/editTextValue"
+                android:saveEnabled="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/seekBarRed"
