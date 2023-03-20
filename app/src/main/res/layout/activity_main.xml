@@ -69,6 +69,7 @@
                 android:progressBackgroundTint="@color/seekBarRed"
                 android:progressTint="@color/seekBarRed"
                 android:thumbTint="@color/seekBarRed"
+                android:saveEnabled="false"
 
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/editTextNumDecRed"
