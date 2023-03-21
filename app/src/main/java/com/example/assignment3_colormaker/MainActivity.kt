@@ -81,10 +81,37 @@ class MainActivity : AppCompatActivity() {
         seekBarBlue.progress = if (editTextBlue.text.toString().isNotEmpty()) (editTextBlue.text.toString()
             .toFloat() * 100).toInt() else 0
 
+        switchRed.isChecked = colorMakerModel.getRedSwitchValue()
+        switchGreen.isChecked = colorMakerModel.getGreenSwitchValue()
+        switchBlue.isChecked = colorMakerModel.getBlueSwitchValue()
+
+        if(!switchRed.isChecked){
+            seekBarRed.isEnabled = false
+            editTextRed.isEnabled = false
+        }
+
+        if(!switchGreen.isChecked){
+            seekBarGreen.isEnabled = false
+            editTextGreen.isEnabled = false
+        }
+
+        if(!switchBlue.isChecked){
+            seekBarBlue.isEnabled = false
+            editTextBlue.isEnabled = false
+        }
+
         // start of  load  colorview
-        val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
-        val green = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
-        val blue = ((editTextBlue.text.toString().toFloat()) * 255).toInt()
+        val red = if (switchRed.isChecked) ((editTextRed.text.toString()
+            .toFloat()) * 255).toInt() else 0
+//            ((editTextRed.text.toString().toFloat()) * 255).toInt()
+        val green = if (switchGreen.isChecked) ((editTextGreen.text.toString()
+            .toFloat()) * 255).toInt() else 0
+//            ((editTextGreen.text.toString().toFloat()) * 255).toInt()
+        val blue = if (switchBlue.isChecked) ((editTextBlue.text.toString()
+            .toFloat()) * 255).toInt() else 0
+//            ((editTextBlue.text.toString().toFloat()) * 255).toInt()
+
+        Log.d(LOG_TAG,"color view color red: $red green: $green blue: $blue")
 
         colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
@@ -167,18 +194,22 @@ class MainActivity : AppCompatActivity() {
                 val red = if (switchRed.isChecked) ((editTextRed.text.toString()
                     .toFloat()) * 255).toInt() else 0
                 val green = 0
-                val blue = if (switchBlue.isChecked) ((editTextGreen.text.toString()
+                val blue = if (switchBlue.isChecked) ((editTextBlue.text.toString()
                     .toFloat()) * 255).toInt() else 0
+
+                colorMakerModel.setGreenSwitchValue(swGreen.isChecked)
 
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
             } else {
                 val red = if (switchRed.isChecked) ((editTextRed.text.toString()
                     .toFloat()) * 255).toInt() else 0
                 val green = ((editTextGreen.text.toString().toFloat()) * 255).toInt()
-                val blue = if (switchBlue.isChecked) ((editTextGreen.text.toString()
+                val blue = if (switchBlue.isChecked) ((editTextBlue.text.toString()
                     .toFloat()) * 255).toInt() else 0
                 seekBarGreen.isEnabled = true
                 editTextGreen.isEnabled = true
+
+                colorMakerModel.setGreenSwitchValue(swGreen.isChecked)
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
             }
         }
@@ -195,6 +226,7 @@ class MainActivity : AppCompatActivity() {
                     .toFloat()) * 255).toInt() else 0
                 val blue = 0
 
+                colorMakerModel.setBlueSwitchValue(swBlue.isChecked)
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
             } else {
                 val red = if (switchRed.isChecked) ((editTextRed.text.toString()
@@ -204,6 +236,8 @@ class MainActivity : AppCompatActivity() {
                 val blue = ((editTextBlue.text.toString().toFloat()) * 255).toInt()
                 seekBarBlue.isEnabled = true
                 editTextBlue.isEnabled = true
+
+                colorMakerModel.setBlueSwitchValue(swBlue.isChecked)
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
             }
@@ -217,18 +251,21 @@ class MainActivity : AppCompatActivity() {
                 val red = 0
                 val green = if (switchGreen.isChecked) ((editTextGreen.text.toString()
                     .toFloat()) * 255).toInt() else 0
-                val blue = if (switchBlue.isChecked) ((editTextGreen.text.toString()
+                val blue = if (switchBlue.isChecked) ((editTextBlue.text.toString()
                     .toFloat()) * 255).toInt() else 0
 
+                colorMakerModel.setRedSwitchValue(swRed.isChecked)
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
             } else {
                 val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
                 val green = if (switchGreen.isChecked) ((editTextGreen.text.toString()
                     .toFloat()) * 255).toInt() else 0
-                val blue = if (switchBlue.isChecked) ((editTextGreen.text.toString()
+                val blue = if (switchBlue.isChecked) ((editTextBlue.text.toString()
                     .toFloat()) * 255).toInt() else 0
                 seekBarRed.isEnabled = true
                 editTextRed.isEnabled = true
+                colorMakerModel.setRedSwitchValue(swRed.isChecked)
+
                 colorView.setBackgroundColor(Color.rgb(red, green, blue))
             }
         }
@@ -347,8 +384,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         Log.d(LOG_TAG, "onDestroy called")
-//        colorMakerModel.saveRedText()
-//        Log.d(LOG_TAG, "On Destroy and save red text value to datastore")
+
     }
     override fun onStart() {
         super.onStart()
