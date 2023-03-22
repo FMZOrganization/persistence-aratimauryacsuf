@@ -1,3 +1,5 @@
+@file:Suppress("UNCHECKED_CAST")
+
 package com.example.assignment3_colormaker
 
 import android.content.Context
@@ -34,7 +36,7 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
     }.distinctUntilChanged() as Flow<Float>
 
     val red_text: Flow<Float> = this.dataStore.data.map { prefs ->
-        prefs[RED_TEXT_KEY] ?: INITIAL_REDTEXT_VALUE
+        prefs[RED_TEXT_KEY] ?: INITIAL_RED_TEXT_VALUE
     }.distinctUntilChanged() as Flow<Float>
 
     val blue_text: Flow<Float> = this.dataStore.data.map { prefs ->
@@ -54,23 +56,29 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
         }
     }
 
-    suspend fun saveRedSwitch(value: Boolean){
-        saveBooleanValue(RED_SWITCH_KEY, value)
+
+    suspend fun saveSwitch(value: Boolean, index: String) {
+        val key: Preferences.Key<Boolean> = when (index) {
+            "red" -> RED_SWITCH_KEY
+            "green" -> GREEN_SWITCH_KEY
+            "blue" -> BLUE_SWITCH_KEY
+            else -> {
+                throw NoSuchFieldException("Invalid input key $index")
+            }
+        }
+        this.saveBooleanValue(key, value)
     }
-    suspend fun saveGreenSwitch(value: Boolean){
-        saveBooleanValue(GREEN_SWITCH_KEY, value)
-    }
-    suspend fun saveBlueSwitch(value: Boolean){
-        saveBooleanValue(BLUE_SWITCH_KEY, value)
-    }
-    suspend fun saveRedText(value: Float) {
-        saveFloatValue(RED_TEXT_KEY, value)
-    }
-    suspend fun saveGreenText(value: Float) {
-        saveFloatValue(GREEN_TEXT_KEY, value)
-    }
-    suspend fun saveBlueText(value: Float) {
-        saveFloatValue(BLUE_TEXT_KEY, value)
+
+    suspend fun saveText(value: Float, index: String) {
+        val key: Preferences.Key<Float> = when (index) {
+            "red" -> RED_TEXT_KEY
+            "green" -> GREEN_TEXT_KEY
+            "blue" -> BLUE_TEXT_KEY
+            else -> {
+                throw NoSuchFieldException("Invalid input key $index")
+            }
+        }
+        this.saveFloatValue(key, value)
     }
 
 

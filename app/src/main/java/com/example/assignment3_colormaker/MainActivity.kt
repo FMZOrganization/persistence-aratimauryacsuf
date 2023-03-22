@@ -114,7 +114,7 @@ class MainActivity : AppCompatActivity() {
             .toFloat()) * 255).toInt() else 0
 
 
-        Log.d(LOG_TAG, "colorview colors red: $red green: $green blue: $blue")
+        Log.d(LOG_TAG, "colorView colors red: $red green: $green blue: $blue")
 
         colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
@@ -219,6 +219,7 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
     private fun setUpSwitchBarListeners() {
         switchGreen.setOnClickListener {
             val swGreen: Switch = it as Switch

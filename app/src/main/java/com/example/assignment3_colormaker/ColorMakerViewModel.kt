@@ -3,11 +3,11 @@ package com.example.assignment3_colormaker
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.GlobalScope
+//import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
-const val INITIAL_REDTEXT_VALUE = 0.0
+const val INITIAL_RED_TEXT_VALUE = 0.0
 const val INITIAL_GREEN_TEXT_VALUE = 0.0
 const val INITIAL_BLUE_TEXT_VALUE = 0.0
 const val INITIAL_RED_SWITCH_VALUE = true
@@ -18,7 +18,7 @@ const val INITIAL_BLUE_SWITCH_VALUE = true
 class ColorMakerViewModel: ViewModel() {
 
 
-    private var redText: Float = INITIAL_REDTEXT_VALUE.toFloat()
+    private var redText: Float = INITIAL_RED_TEXT_VALUE.toFloat()
     private var greenText: Float = INITIAL_GREEN_TEXT_VALUE.toFloat()
     private var blueText: Float = INITIAL_BLUE_TEXT_VALUE.toFloat()
 
@@ -34,83 +34,56 @@ class ColorMakerViewModel: ViewModel() {
     }
 
     private val prefs = ColorMakerPreferencesDataStore.getRepository()
-    fun saveRedText() {
-        Log.i(LOG_TAG, "In saveRedText method: -  $redText")
+
+   private fun saveText(editText: Float, color: String) {
+        Log.i(LOG_TAG, "In saveText method: -  $editText")
         viewModelScope.launch {
-            prefs.saveRedText(redText)
-            Log.d(LOG_TAG, "Saving the red text: $redText")
-        }
-    }
-    fun saveGreenText() {
-        Log.i(LOG_TAG, "In saveGreenText method: -  ${greenText}")
-        viewModelScope.launch {
-            prefs.saveGreenText(greenText)
-            Log.d(LOG_TAG, "Saving the green text: $greenText")
-        }
-    }
-    fun saveBlueText() {
-        Log.i(LOG_TAG, "In saveBlueText method: -  ${blueText}")
-        viewModelScope.launch {
-            prefs.saveBlueText(blueText)
-            Log.d(LOG_TAG, "Saving the  textblue: $blueText")
+            prefs.saveText(editText,color)
+            Log.d(LOG_TAG, "Saving the $color text: $editText")
         }
     }
 
-    fun saveRedSwitch(){
-        Log.i(LOG_TAG, "In saveRedSwitch method: -  ${redSwitch}")
+   private fun saveSwitch(switchVal: Boolean , color: String) {
+        Log.i(LOG_TAG, "In switchValue method: -  $switchVal")
         viewModelScope.launch {
-            prefs.saveRedSwitch(redSwitch)
-            Log.d(LOG_TAG, "Saving the  redSwitch : $redSwitch")
+            prefs.saveSwitch(switchVal,color)
+            Log.d(LOG_TAG, "Saving the $color switchValue: $switchVal")
         }
     }
-    fun saveGreenSwitch(){
-        Log.i(LOG_TAG, "In saveGreenSwitch method: -  ${greenSwitch}")
-        viewModelScope.launch {
-            prefs.saveGreenSwitch(greenSwitch)
-            Log.d(LOG_TAG, "Saving the  greenSwitch : $greenSwitch")
-        }
-    }fun saveBlueSwitch(){
-        Log.i(LOG_TAG, "In saveBlueSwitch method: -  ${blueSwitch}")
-        viewModelScope.launch {
-            prefs.saveBlueSwitch(blueSwitch)
-            Log.d(LOG_TAG, "Saving the  blueSwitch : $blueSwitch")
-        }
-    }
-
 
     fun loadRedText() {
-        GlobalScope.launch {
+        viewModelScope.launch {
             prefs.red_text.collectLatest {
                 redText = it
                 Log.d(LOG_TAG, "Loaded the red TExt from DataStore: $redText")
             }
         }
-        GlobalScope.launch {
+        viewModelScope.launch {
             prefs.green_text.collectLatest {
                 greenText = it
                 Log.d(LOG_TAG, "Loaded the green TExt from DataStore: $greenText")
             }
         }
-        GlobalScope.launch {
+        viewModelScope.launch {
             prefs.blue_text.collectLatest {
                 blueText = it
                 Log.d(LOG_TAG, "Loaded the blue TExt from DataStore: $blueText")
             }
         }
-        GlobalScope.launch {
+        viewModelScope.launch {
             prefs.red_switch.collectLatest {
                 redSwitch = it
                 Log.d(LOG_TAG, "Loaded the red Switch from DataStore: $redSwitch")
             }
         }
 
-        GlobalScope.launch {
+        viewModelScope.launch {
             prefs.green_switch.collectLatest {
                 greenSwitch = it
                 Log.d(LOG_TAG, "Loaded the green Switch from DataStore: $greenSwitch")
             }
         }
-        GlobalScope.launch {
+        viewModelScope.launch {
             prefs.blue_switch.collectLatest {
                 blueSwitch = it
                 Log.d(LOG_TAG, "Loaded the blue Switch from DataStore: $blueSwitch")
@@ -127,7 +100,8 @@ class ColorMakerViewModel: ViewModel() {
 
     fun setRedTextValue(c: Float) {
         this.redText = c
-        saveRedText()
+        val color = "red"
+        saveText(redText, color)
     }
 
     fun getGreenTextValue(): Float {
@@ -137,7 +111,9 @@ class ColorMakerViewModel: ViewModel() {
 
     fun setGreenTextValue(c: Float) {
         this.greenText = c
-        saveGreenText()
+        val color = "green"
+        saveText(greenText, color)
+//        saveGreenText()
     }
 
     fun getBlueTextValue(): Float {
@@ -147,7 +123,9 @@ class ColorMakerViewModel: ViewModel() {
 
     fun setBlueTextValue(c: Float) {
         this.blueText = c
-        saveBlueText()
+        val color = "blue"
+        saveText(blueText, color)
+//        saveBlueText()
 
     }
 
@@ -157,7 +135,8 @@ class ColorMakerViewModel: ViewModel() {
     }
     fun setRedSwitchValue(switchValue: Boolean){
         this.redSwitch  = switchValue
-        saveRedSwitch()
+        val color = "red"
+        saveSwitch(redSwitch,color)
     }
     fun getGreenSwitchValue(): Boolean {
         Log.d(
@@ -168,7 +147,8 @@ class ColorMakerViewModel: ViewModel() {
     }
     fun setGreenSwitchValue(switchValue: Boolean){
         this.greenSwitch  = switchValue
-        saveGreenSwitch()
+        val color = "green"
+        saveSwitch(greenSwitch,color)
     }
 
 
@@ -181,6 +161,7 @@ class ColorMakerViewModel: ViewModel() {
     }
     fun setBlueSwitchValue(switchValue: Boolean){
         this.blueSwitch  = switchValue
-        saveBlueSwitch()
+        val color = "blue"
+        saveSwitch(blueSwitch,color)
     }
 }
