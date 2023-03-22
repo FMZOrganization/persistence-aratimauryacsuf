@@ -13,7 +13,7 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
     private val RED_TEXT_KEY = floatPreferencesKey("red_text")
    private val GREEN_TEXT_KEY = floatPreferencesKey("green_text")
   private val BLUE_TEXT_KEY = floatPreferencesKey("blue_text")
-    private val RED_SWITCH_KEY = booleanPreferencesKey("red_swich")
+    private val RED_SWITCH_KEY = booleanPreferencesKey("red_switch")
     private val GREEN_SWITCH_KEY = booleanPreferencesKey("green_switch")
     private val BLUE_SWITCH_KEY = booleanPreferencesKey("blue_switch")
 
@@ -72,6 +72,9 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
     suspend fun saveBlueText(value: Float) {
         saveFloatValue(BLUE_TEXT_KEY, value)
     }
+
+
+
 
     companion object {
         private const val PREFERENCES_DATA_FILE_NAME = "settings"
