@@ -11,5 +11,5 @@ color-maker-aratimauryacsuf created by GitHub Classroom
 
 
 ### Assignment 4 - Implementing Persistence for Color Maker app
-##### As apart of assignment 4 make color maker app persistence.
+##### As apart of assignment 4 made color maker app persistence.
 
