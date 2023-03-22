@@ -13,22 +13,22 @@ import kotlinx.coroutines.flow.map
 class ColorMakerPreferencesDataStore private constructor(private val dataStore: DataStore<Preferences>) {
 
     private val RED_TEXT_KEY = floatPreferencesKey("red_text")
-   private val GREEN_TEXT_KEY = floatPreferencesKey("green_text")
-  private val BLUE_TEXT_KEY = floatPreferencesKey("blue_text")
+    private val GREEN_TEXT_KEY = floatPreferencesKey("green_text")
+    private val BLUE_TEXT_KEY = floatPreferencesKey("blue_text")
     private val RED_SWITCH_KEY = booleanPreferencesKey("red_switch")
     private val GREEN_SWITCH_KEY = booleanPreferencesKey("green_switch")
     private val BLUE_SWITCH_KEY = booleanPreferencesKey("blue_switch")
 
-    val red_switch: Flow<Boolean> = this.dataStore.data.map { prefs->
-    prefs[RED_SWITCH_KEY]  ?:  INITIAL_RED_SWITCH_VALUE
+    val red_switch: Flow<Boolean> = this.dataStore.data.map { prefs ->
+        prefs[RED_SWITCH_KEY] ?: INITIAL_RED_SWITCH_VALUE
     }.distinctUntilChanged()
 
-    val green_switch: Flow<Boolean> = this.dataStore.data.map { prefs->
-        prefs[GREEN_SWITCH_KEY]  ?:  INITIAL_GREEN_SWITCH_VALUE
+    val green_switch: Flow<Boolean> = this.dataStore.data.map { prefs ->
+        prefs[GREEN_SWITCH_KEY] ?: INITIAL_GREEN_SWITCH_VALUE
     }.distinctUntilChanged()
 
-    val blue_switch: Flow<Boolean> = this.dataStore.data.map { prefs->
-        prefs[BLUE_SWITCH_KEY]  ?:  INITIAL_BLUE_SWITCH_VALUE
+    val blue_switch: Flow<Boolean> = this.dataStore.data.map { prefs ->
+        prefs[BLUE_SWITCH_KEY] ?: INITIAL_BLUE_SWITCH_VALUE
     }.distinctUntilChanged()
 
     val green_text: Flow<Float> = this.dataStore.data.map { prefs ->
@@ -50,7 +50,7 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
         }
     }
 
-    private suspend fun saveBooleanValue(key:Preferences.Key<Boolean>, value: Boolean){
+    private suspend fun saveBooleanValue(key: Preferences.Key<Boolean>, value: Boolean) {
         this.dataStore.edit { prefs ->
             prefs[key] = value
         }
@@ -82,8 +82,6 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
     }
 
 
-
-
     companion object {
         private const val PREFERENCES_DATA_FILE_NAME = "settings"
         private var INSTANCE: ColorMakerPreferencesDataStore? = null
@@ -95,8 +93,10 @@ class ColorMakerPreferencesDataStore private constructor(private val dataStore: 
                 INSTANCE = ColorMakerPreferencesDataStore(dataStore)
             }
         }
+
         fun getRepository(): ColorMakerPreferencesDataStore {
-            return INSTANCE ?: throw IllegalStateException("AppPreferencesRepository not initialized yet")
+            return INSTANCE
+                ?: throw IllegalStateException("AppPreferencesRepository not initialized yet")
         }
     }
 }
