@@ -1,4 +1,4 @@
-# color-maker-aratimauryacsuf
+# Assignment 3 - color-maker-aratimauryacsuf
 color-maker-aratimauryacsuf created by GitHub Classroom
 
 ### Implementation
@@ -7,4 +7,7 @@ color-maker-aratimauryacsuf created by GitHub Classroom
 ##### 3. Usage of strings file for widget texts. 
 ##### 4. Implemented custom app icon.
 ##### 5. Responsive UI
+
+# Assignment 4 - Persistence Color Maker 
+## As apart of assignment 4 make color maker app persistence.
 
