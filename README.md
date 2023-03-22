@@ -1,6 +1,7 @@
-# Assignment 3 - color-maker-aratimauryacsuf
+# color-maker-aratimauryacsuf
 color-maker-aratimauryacsuf created by GitHub Classroom
 
+### Assignment 3 -  Color Maker app
 ### Implementation
 ##### 1. I have used View , Switch , Seekbar , PlainText and Button widgets and used Constraint and Linear layout combination.
 ##### 2. Layout for Potrait and Landscape mode.
@@ -8,6 +9,7 @@ color-maker-aratimauryacsuf created by GitHub Classroom
 ##### 4. Implemented custom app icon.
 ##### 5. Responsive UI
 
-# Assignment 4 - Persistence Color Maker 
-## As apart of assignment 4 make color maker app persistence.
+
+### Assignment 4 - Implementing Persistence for Color Maker app
+##### As apart of assignment 4 make color maker app persistence.
 
