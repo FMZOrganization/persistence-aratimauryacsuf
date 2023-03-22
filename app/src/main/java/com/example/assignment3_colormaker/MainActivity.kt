@@ -7,10 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import android.widget.SeekBar
-import android.widget.Switch
+import android.widget.*
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModelProvider
 
@@ -39,7 +36,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("UseSwitchCompatOrMaterialCode")
     @RequiresApi(Build.VERSION_CODES.S)
 
-    private fun connectViews(){
+    private fun connectViews() {
         colorView = findViewById(R.id.colorView)
 
         switchRed = findViewById(R.id.switchRed)
@@ -62,60 +59,65 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun loadViews(){
+    private fun loadViews() {
 
         resetButton.setTextColor(Color.WHITE)
 
         colorMakerModel.loadRedText()
-        Log.d(LOG_TAG, "OnCreate Method: setting red text value  from datastore ${colorMakerModel.getRedTextValue()}")
+        Log.d(
+            LOG_TAG,
+            "OnCreate Method: setting red text value  from datastore ${colorMakerModel.getRedTextValue()}"
+        )
         editTextRed.setText(colorMakerModel.getRedTextValue().toString())
-        seekBarRed.progress = if (editTextRed.text.toString().isNotEmpty()) (editTextRed.text.toString()
-            .toFloat() * 100).toInt() else 0
+        seekBarRed.progress =
+            if (editTextRed.text.toString().isNotEmpty()) (editTextRed.text.toString()
+                .toFloat() * 100).toInt() else 0
 
         editTextGreen.setText(colorMakerModel.getGreenTextValue().toString())
-        seekBarGreen.progress = if (editTextGreen.text.toString().isNotEmpty()) (editTextGreen.text.toString()
-            .toFloat() * 100).toInt() else 0
+        seekBarGreen.progress =
+            if (editTextGreen.text.toString().isNotEmpty()) (editTextGreen.text.toString()
+                .toFloat() * 100).toInt() else 0
 
 
         editTextBlue.setText(colorMakerModel.getBlueTextValue().toString())
-        seekBarBlue.progress = if (editTextBlue.text.toString().isNotEmpty()) (editTextBlue.text.toString()
-            .toFloat() * 100).toInt() else 0
+        seekBarBlue.progress =
+            if (editTextBlue.text.toString().isNotEmpty()) (editTextBlue.text.toString()
+                .toFloat() * 100).toInt() else 0
 
         switchRed.isChecked = colorMakerModel.getRedSwitchValue()
         switchGreen.isChecked = colorMakerModel.getGreenSwitchValue()
         switchBlue.isChecked = colorMakerModel.getBlueSwitchValue()
 
-        if(!switchRed.isChecked){
+        if (!switchRed.isChecked) {
             seekBarRed.isEnabled = false
             editTextRed.isEnabled = false
         }
 
-        if(!switchGreen.isChecked){
+        if (!switchGreen.isChecked) {
             seekBarGreen.isEnabled = false
             editTextGreen.isEnabled = false
         }
 
-        if(!switchBlue.isChecked){
+        if (!switchBlue.isChecked) {
             seekBarBlue.isEnabled = false
             editTextBlue.isEnabled = false
         }
 
-        // start of  load  colorview
+
         val red = if (switchRed.isChecked) ((editTextRed.text.toString()
             .toFloat()) * 255).toInt() else 0
-//            ((editTextRed.text.toString().toFloat()) * 255).toInt()
+
         val green = if (switchGreen.isChecked) ((editTextGreen.text.toString()
             .toFloat()) * 255).toInt() else 0
-//            ((editTextGreen.text.toString().toFloat()) * 255).toInt()
+
         val blue = if (switchBlue.isChecked) ((editTextBlue.text.toString()
             .toFloat()) * 255).toInt() else 0
-//            ((editTextBlue.text.toString().toFloat()) * 255).toInt()
 
-        Log.d(LOG_TAG,"color view color red: $red green: $green blue: $blue")
+
+        Log.d(LOG_TAG, "colorview colors red: $red green: $green blue: $blue")
 
         colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
-        //-----end of load colorView
 
     }
 
@@ -135,34 +137,56 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun setUpEditTextListeners(){
+    private fun setUpEditTextListeners() {
         editTextGreen.setOnKeyListener { view, i, keyEvent ->
             Boolean
             val txtGreen = view as EditText
-
-            seekBarGreen.progress =
-                if (txtGreen.text.toString().isNotEmpty()) (txtGreen.text.toString()
-                    .toFloat() * 100).toInt() else 0
-            if (txtGreen.text.toString().isEmpty()) {
+            val txtValidation = if (txtGreen.text.toString().isNotEmpty()) (this.validateInput(
+                txtGreen.text.toString()
+            )) else true
+            Log.i(LOG_TAG, "In editGreen text Listener input text validation value $txtValidation")
+            if (txtValidation) {
+                seekBarGreen.progress =
+                    if (txtGreen.text.toString().isNotEmpty()) (txtGreen.text.toString()
+                        .toFloat() * 100).toInt() else 0
+                if (txtGreen.text.toString().isEmpty()) {
+                    editTextGreen.setText(((seekBarGreen.progress.div(100.00)).toString()))
+                }
+                colorMakerModel.setGreenTextValue(editTextGreen.text.toString().toFloat())
+                Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
+            } else {
+                Toast.makeText(this, "Enter number between 0 - 1", Toast.LENGTH_LONG).show()
                 editTextGreen.setText(((seekBarGreen.progress.div(100.00)).toString()))
+
             }
-            colorMakerModel.setGreenTextValue(editTextGreen.text.toString().toFloat())
-            Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
             false
 
         }
         editTextRed.setOnKeyListener { view, i, keyEvent ->
             Boolean
             val txtRed = view as EditText
-            seekBarRed.progress = if (txtRed.text.toString().isNotEmpty()) (txtRed.text.toString()
-                .toFloat() * 100).toInt() else 0
-            if (txtRed.text.toString().isEmpty()) {
-                editTextRed.setText(((seekBarRed.progress.div(100.00)).toString()))
-            }
-            colorMakerModel.setRedTextValue(editTextRed.text.toString().toFloat())
+            val txtValidation = if (txtRed.text.toString()
+                    .isNotEmpty()
+            ) (this.validateInput(txtRed.text.toString())) else true
+            if (txtValidation) {
 
-            Log.i(LOG_TAG, txtRed.text.toString())
-            Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
+                seekBarRed.progress =
+                    if (txtRed.text.toString().isNotEmpty()) (txtRed.text.toString()
+                        .toFloat() * 100).toInt() else 0
+                if (txtRed.text.toString().isEmpty()) {
+                    editTextRed.setText(((seekBarRed.progress.div(100.00)).toString()))
+                }
+                colorMakerModel.setRedTextValue(editTextRed.text.toString().toFloat())
+
+                Log.i(LOG_TAG, txtRed.text.toString())
+                Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
+
+            } else {
+                Toast.makeText(this, "Enter number between 0 - 1", Toast.LENGTH_LONG).show()
+                editTextRed.setText(((seekBarRed.progress.div(100.00)).toString()))
+
+            }
+
             false
 
 
@@ -170,21 +194,32 @@ class MainActivity : AppCompatActivity() {
         editTextBlue.setOnKeyListener { view, i, keyEvent ->
             Boolean
             val txtBlue = view as EditText
-            seekBarBlue.progress =
-                if (txtBlue.text.toString().isNotEmpty()) (txtBlue.text.toString()
-                    .toFloat() * 100).toInt() else 0
-            if (txtBlue.text.toString().isEmpty()) {
+            val txtValidation = if (txtBlue.text.toString().isNotEmpty()) (this.validateInput(
+                txtBlue.text.toString()
+            )) else true
+
+            if (txtValidation) {
+                seekBarBlue.progress =
+                    if (txtBlue.text.toString().isNotEmpty()) (txtBlue.text.toString()
+                        .toFloat() * 100).toInt() else 0
+                if (txtBlue.text.toString().isEmpty()) {
+                    editTextBlue.setText(((seekBarBlue.progress.div(100.00)).toString()))
+                }
+                colorMakerModel.setBlueTextValue(editTextBlue.text.toString().toFloat())
+                Log.i(LOG_TAG, txtBlue.text.toString())
+                Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
+            } else {
+                Toast.makeText(this, "Enter number between 0 - 1", Toast.LENGTH_LONG).show()
                 editTextBlue.setText(((seekBarBlue.progress.div(100.00)).toString()))
+
             }
-            colorMakerModel.setBlueTextValue(editTextBlue.text.toString().toFloat())
-            Log.i(LOG_TAG, txtBlue.text.toString())
-            Log.i(LOG_TAG, "Test key pressed $i $keyEvent")
             false
 
         }
 
     }
-    private fun setUpSwitchBarListeners(){
+
+    private fun setUpSwitchBarListeners() {
         switchGreen.setOnClickListener {
             val swGreen: Switch = it as Switch
             if (!swGreen.isChecked) {
@@ -271,7 +306,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setUpSeekBarListeners(){
+    private fun setUpSeekBarListeners() {
         seekBarRed.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
 
             override fun onProgressChanged(sb: SeekBar?, p1: Int, p2: Boolean) {
@@ -352,10 +387,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun resetButtonListener(){
+    private fun resetButtonListener() {
         resetButton.setOnClickListener { view: View ->
             val resetBtn = view as Button
-            val txtResetBtn =resetBtn.text.toString()
+            val txtResetBtn = resetBtn.text.toString()
             editTextRed.setText(R.string.editTextResetValue)
             editTextBlue.setText(R.string.editTextResetValue)
             editTextGreen.setText(R.string.editTextResetValue)
@@ -386,18 +421,22 @@ class MainActivity : AppCompatActivity() {
         Log.d(LOG_TAG, "onDestroy called")
 
     }
+
     override fun onStart() {
         super.onStart()
         Log.d(LOG_TAG, "onStart called")
     }
+
     override fun onStop() {
         super.onStop()
         Log.d(LOG_TAG, "onStop called")
     }
+
     override fun onResume() {
         super.onResume()
         Log.d(LOG_TAG, "onResume called")
     }
+
     override fun onPause() {
         super.onPause()
         Log.d(LOG_TAG, "onPause called")
@@ -408,4 +447,17 @@ class MainActivity : AppCompatActivity() {
         ViewModelProvider(this)[ColorMakerViewModel::class.java]
     }
 
+    private fun validateInput(editTextValue: String): Boolean {
+        Log.i(LOG_TAG, "Inside validate Input")
+        if (editTextValue == ".") {
+            Log.d(LOG_TAG, "In Input validation checking if string is '.'")
+            return false
+        }
+        if ((editTextValue.toFloat() < 0.00) or (editTextValue.toFloat() > 1.00)) {
+            Log.d(LOG_TAG, "In Input validation checking editTextValue is between 0 to 1)")
+            return false
+        }
+
+        return true
+    }
 }
