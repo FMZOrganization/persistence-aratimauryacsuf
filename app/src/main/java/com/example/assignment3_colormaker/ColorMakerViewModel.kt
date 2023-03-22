@@ -3,7 +3,6 @@ package com.example.assignment3_colormaker
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-//import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -15,7 +14,7 @@ const val INITIAL_GREEN_SWITCH_VALUE = true
 const val INITIAL_BLUE_SWITCH_VALUE = true
 
 
-class ColorMakerViewModel: ViewModel() {
+class ColorMakerViewModel : ViewModel() {
 
 
     private var redText: Float = INITIAL_RED_TEXT_VALUE.toFloat()
@@ -26,7 +25,7 @@ class ColorMakerViewModel: ViewModel() {
     private var greenSwitch: Boolean = INITIAL_GREEN_SWITCH_VALUE
     private var blueSwitch: Boolean = INITIAL_BLUE_SWITCH_VALUE
 
-   // var redText:Float = 22.8f
+
 
     override fun onCleared() {
         super.onCleared()
@@ -35,18 +34,18 @@ class ColorMakerViewModel: ViewModel() {
 
     private val prefs = ColorMakerPreferencesDataStore.getRepository()
 
-   private fun saveText(editText: Float, color: String) {
+    private fun saveText(editText: Float, color: String) {
         Log.i(LOG_TAG, "In saveText method: -  $editText")
         viewModelScope.launch {
-            prefs.saveText(editText,color)
+            prefs.saveText(editText, color)
             Log.d(LOG_TAG, "Saving the $color text: $editText")
         }
     }
 
-   private fun saveSwitch(switchVal: Boolean , color: String) {
+    private fun saveSwitch(switchVal: Boolean, color: String) {
         Log.i(LOG_TAG, "In switchValue method: -  $switchVal")
         viewModelScope.launch {
-            prefs.saveSwitch(switchVal,color)
+            prefs.saveSwitch(switchVal, color)
             Log.d(LOG_TAG, "Saving the $color switchValue: $switchVal")
         }
     }
@@ -94,7 +93,6 @@ class ColorMakerViewModel: ViewModel() {
     }
 
     fun getRedTextValue(): Float {
-        Log.d(LOG_TAG, "getRedTextValue method : Counter this value ${this.redText} and counter is $redText")
         return this.redText
     }
 
@@ -105,7 +103,6 @@ class ColorMakerViewModel: ViewModel() {
     }
 
     fun getGreenTextValue(): Float {
-        Log.d(LOG_TAG, "getGreenTextValue method : Counter this value ${this.greenText} and counter is $greenText")
         return this.greenText
     }
 
@@ -113,11 +110,10 @@ class ColorMakerViewModel: ViewModel() {
         this.greenText = c
         val color = "green"
         saveText(greenText, color)
-//        saveGreenText()
+
     }
 
     fun getBlueTextValue(): Float {
-        Log.d(LOG_TAG, "getBlueTextValue method : Counter this value ${this.blueText} and counter is $blueText")
         return this.blueText
     }
 
@@ -125,43 +121,36 @@ class ColorMakerViewModel: ViewModel() {
         this.blueText = c
         val color = "blue"
         saveText(blueText, color)
-//        saveBlueText()
-
     }
 
-    fun getRedSwitchValue(): Boolean{
-        Log.d(LOG_TAG, "getRedSwitchValue method : switch this value ${this.redSwitch} and counter is $redSwitch")
+    fun getRedSwitchValue(): Boolean {
+
         return this.redSwitch
     }
-    fun setRedSwitchValue(switchValue: Boolean){
-        this.redSwitch  = switchValue
+
+    fun setRedSwitchValue(switchValue: Boolean) {
+        this.redSwitch = switchValue
         val color = "red"
-        saveSwitch(redSwitch,color)
+        saveSwitch(redSwitch, color)
     }
+
     fun getGreenSwitchValue(): Boolean {
-        Log.d(
-            LOG_TAG,
-            "getGreenSwitchValue method : switch this value ${this.greenSwitch} and counter is $greenSwitch"
-        )
         return this.greenSwitch
     }
-    fun setGreenSwitchValue(switchValue: Boolean){
-        this.greenSwitch  = switchValue
-        val color = "green"
-        saveSwitch(greenSwitch,color)
-    }
 
+    fun setGreenSwitchValue(switchValue: Boolean) {
+        this.greenSwitch = switchValue
+        val color = "green"
+        saveSwitch(greenSwitch, color)
+    }
 
     fun getBlueSwitchValue(): Boolean {
-        Log.d(
-            LOG_TAG,
-            "getBlueSwitchValue method : switch this value ${this.blueSwitch} and counter is $blueSwitch"
-        )
         return this.blueSwitch
     }
-    fun setBlueSwitchValue(switchValue: Boolean){
-        this.blueSwitch  = switchValue
+
+    fun setBlueSwitchValue(switchValue: Boolean) {
+        this.blueSwitch = switchValue
         val color = "blue"
-        saveSwitch(blueSwitch,color)
+        saveSwitch(blueSwitch, color)
     }
 }

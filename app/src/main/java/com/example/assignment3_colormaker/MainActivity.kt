@@ -64,10 +64,7 @@ class MainActivity : AppCompatActivity() {
         resetButton.setTextColor(Color.WHITE)
 
         colorMakerModel.loadRedText()
-        Log.d(
-            LOG_TAG,
-            "OnCreate Method: setting red text value  from datastore ${colorMakerModel.getRedTextValue()}"
-        )
+
         editTextRed.setText(colorMakerModel.getRedTextValue().toString())
         seekBarRed.progress =
             if (editTextRed.text.toString().isNotEmpty()) (editTextRed.text.toString()
@@ -317,7 +314,7 @@ class MainActivity : AppCompatActivity() {
 
                     editTextRed.setText((seekBarProgressRed.toString()))
                     colorMakerModel.setRedTextValue(editTextRed.text.toString().toFloat())
-//                    colorMakerModel.saveRedText()
+
                     Log.i(LOG_TAG, "seekBarRed change: saveRedText called -  $editTextRed")
                 }
                 val red = ((editTextRed.text.toString().toFloat()) * 255).toInt()
@@ -449,16 +446,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun validateInput(editTextValue: String): Boolean {
-        Log.i(LOG_TAG, "Inside validate Input")
+
         if (editTextValue == ".") {
-            Log.d(LOG_TAG, "In Input validation checking if string is '.'")
             return false
         }
         if ((editTextValue.toFloat() < 0.00) or (editTextValue.toFloat() > 1.00)) {
-            Log.d(LOG_TAG, "In Input validation checking editTextValue is between 0 to 1)")
             return false
         }
-
         return true
     }
 }
