@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">Color Maker</string>
+    <string name="switchRed">Red</string>
+    <string name="switchGreen">Green</string>
+    <string name="switchBlue">Blue</string>
+
+    <string name="editTextHint">0.0</string>
+    <string name="editTextValue">0.0</string>
+    <string name="editTextResetValue">0.0</string>
+
+    <string name="resetButton">Reset</string>
+
+
+</resources>
