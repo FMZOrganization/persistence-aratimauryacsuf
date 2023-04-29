@@ -3,8 +3,9 @@ package com.example.assignment3_colormaker
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import java.lang.Thread.sleep
 
 const val INITIAL_RED_TEXT_VALUE = 0.0
 const val INITIAL_GREEN_TEXT_VALUE = 0.0
@@ -26,10 +27,9 @@ class ColorMakerViewModel : ViewModel() {
     private var blueSwitch: Boolean = INITIAL_BLUE_SWITCH_VALUE
 
 
-
     override fun onCleared() {
         super.onCleared()
-        Log.d("MainActivity", "OnCleared of CounterViewActivity called")
+        Log.d("MainActivity", "OnCleared of ColorMakerViewModel called")
     }
 
     private val prefs = ColorMakerPreferencesDataStore.getRepository()
@@ -50,46 +50,55 @@ class ColorMakerViewModel : ViewModel() {
         }
     }
 
-    fun loadRedText() {
-        viewModelScope.launch {
+
+    fun loadTextValues() {
+
+        GlobalScope.launch {
             prefs.red_text.collectLatest {
                 redText = it
-                Log.d(LOG_TAG, "Loaded the red TExt from DataStore: $redText")
+                Log.d(LOG_TAG, "Loaded the red Text from DataStore: $redText")
             }
         }
-        viewModelScope.launch {
+        GlobalScope.launch {
             prefs.green_text.collectLatest {
                 greenText = it
-                Log.d(LOG_TAG, "Loaded the green TExt from DataStore: $greenText")
+                Log.d(LOG_TAG, "Loaded the green Text from DataStore: $greenText")
             }
         }
-        viewModelScope.launch {
+        GlobalScope.launch {
             prefs.blue_text.collectLatest {
                 blueText = it
-                Log.d(LOG_TAG, "Loaded the blue TExt from DataStore: $blueText")
+                Log.d(LOG_TAG, "Loaded the blue Text from DataStore: $blueText")
             }
         }
-        viewModelScope.launch {
+        sleep(1000)
+
+
+    }
+
+    fun loadSwitchValues() {
+        GlobalScope.launch {
             prefs.red_switch.collectLatest {
                 redSwitch = it
                 Log.d(LOG_TAG, "Loaded the red Switch from DataStore: $redSwitch")
             }
         }
 
-        viewModelScope.launch {
+
+        GlobalScope.launch {
             prefs.green_switch.collectLatest {
                 greenSwitch = it
                 Log.d(LOG_TAG, "Loaded the green Switch from DataStore: $greenSwitch")
             }
         }
-        viewModelScope.launch {
+
+        GlobalScope.launch {
             prefs.blue_switch.collectLatest {
                 blueSwitch = it
                 Log.d(LOG_TAG, "Loaded the blue Switch from DataStore: $blueSwitch")
             }
         }
-
-        Thread.sleep(1000)
+        sleep(1000)
     }
 
     fun getRedTextValue(): Float {
