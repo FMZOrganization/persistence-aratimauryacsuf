@@ -63,7 +63,16 @@ class MainActivity : AppCompatActivity() {
 
         resetButton.setTextColor(Color.WHITE)
 
-        colorMakerModel.loadRedText()
+        colorMakerModel.loadSwitchValues()
+        colorMakerModel.loadTextValues()
+
+        Log.d(LOG_TAG, "Assigning values after loading from datastore")
+        assignValues()
+
+
+    }
+
+    private fun assignValues() {
 
         editTextRed.setText(colorMakerModel.getRedTextValue().toString())
         seekBarRed.progress =
@@ -116,7 +125,6 @@ class MainActivity : AppCompatActivity() {
 
         colorView.setBackgroundColor(Color.rgb(red, green, blue))
 
-
     }
 
 
@@ -129,6 +137,7 @@ class MainActivity : AppCompatActivity() {
         this.connectViews()
         this.loadViews()
         this.setUpEditTextListeners()
+
         this.setUpSwitchBarListeners()
         this.setUpSeekBarListeners()
         this.resetButtonListener()
